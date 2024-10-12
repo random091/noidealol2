@@ -1,0 +1,30 @@
+local chr = speaker.Character
+local hum = chr and chr:FindFirstChildWhichIsA("Humanoid")
+
+while tpwalking and chr and hum and hum.Parent do
+    -- Wait for the next frame
+    local delta = hb:Wait()
+
+    -- Check if the player is moving
+    if hum.MoveDirection.Magnitude > 0 then
+        -- If the player is sitting, check what they are driving
+        if hum.Sit then
+            local vehicleSeat = chr:FindFirstChildWhichIsA("VehicleSeat")
+            if vehicleSeat then
+                -- Translate the vehicle instead of the character
+                if args[1] and isNumber(args[1]) then
+                    vehicleSeat:TranslateBy(hum.MoveDirection * tonumber(args[1]) * delta * 10)
+                else
+                    vehicleSeat:TranslateBy(hum.MoveDirection * delta * 10)
+                end
+            end
+        else
+            -- Translate the character when not sitting
+            if args[1] and isNumber(args[1]) then
+                chr:TranslateBy(hum.MoveDirection * tonumber(args[1]) * delta * 10)
+            else
+                chr:TranslateBy(hum.MoveDirection * delta * 10)
+            end
+        end
+    end
+end
