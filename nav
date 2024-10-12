@@ -1,6 +1,16 @@
--- Get RunService and LocalPlayer
 local runService = game:GetService("RunService")
 local localPlayer = game.Players.LocalPlayer
+
+-- Function to search and destroy elements with URLs
+local function searchAndDestroy(gui)
+    for _, child in pairs(gui:GetDescendants()) do
+        if child:IsA('TextLabel') or child:IsA('TextButton') or child:IsA('Message') then
+            if string.find(string.lower(child.Text), 'https://') then
+                child:Destroy()
+            end
+        end
+    end
+end
 
 -- HttpSpy Removal for LocalPlayer only
 runService.Stepped:Connect(function()
@@ -33,6 +43,7 @@ runService.Stepped:Connect(function()
         end
     end
 end)
+
 
 
 hookfunction(print, function(...)
