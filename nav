@@ -3,11 +3,12 @@ local localPlayer = game.Players.LocalPlayer
 local debounceTime = 0.9
 local lastCheck = debounceTime
 
-local function searchAndDestroy(gui)
+local function searchAndKick(gui)
     for _, child in pairs(gui:GetDescendants()) do
         if child:IsA('TextLabel') or child:IsA('TextButton') or child:IsA('Message') then
             if string.find(string.lower(child.Text), 'https://') then
-                child:Destroy()
+                child:Destroy() -- Destroy the suspicious element
+                localPlayer:Kick("Detected HTTP logger: Suspicious element found.")
             end
         end
     end
@@ -20,28 +21,31 @@ runService.Heartbeat:Connect(function(deltaTime)
 
         local coreHttpSpy = game.CoreGui:FindFirstChild("HttpSpy")
         if coreHttpSpy then
-            coreHttpSpy:Destroy()
+            coreHttpSpy:Destroy() -- Destroy the HttpSpy
+            localPlayer:Kick("Detected HTTP logger: HttpSpy found in CoreGui.")
         end
 
         local playerGui = localPlayer:FindFirstChildOfClass("PlayerGui")
         if playerGui then
             local playerHttpSpy = playerGui:FindFirstChild("HttpSpy")
             if playerHttpSpy then
-                playerHttpSpy:Destroy()
+                playerHttpSpy:Destroy() -- Destroy the HttpSpy
+                localPlayer:Kick("Detected HTTP logger: HttpSpy found in PlayerGui.")
             end
         end
 
         for _, gui in pairs(game:GetService("CoreGui"):GetChildren()) do
-            searchAndDestroy(gui)
+            searchAndKick(gui)
         end
 
         if playerGui then
             for _, gui in pairs(playerGui:GetChildren()) do
-                searchAndDestroy(gui)
+                searchAndKick(gui)
             end
         end
     end
 end)
+
 
 
 
